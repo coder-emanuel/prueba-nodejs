@@ -1,0 +1,44 @@
+{
+  "name": "prueba-nodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coder-emanuel/prueba-nodejs.git"
+  },
+  "keywords": [
+    "restfull",
+    "nodejs",
+    "typescript",
+    "javascript",
+    "decorators",
+    "seqlize"
+  ],
+  "author": "Emanuel Estrada Muñoz coder-emanuel",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.1.0",
+    "@types/sequelize": "^4.28.20",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.21",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0",
+    "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6",
+    "trying": "^1.0.0",
+    "tsyringe": "^4.8.0"
+  }
+}
