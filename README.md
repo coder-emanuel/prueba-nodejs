@@ -33,6 +33,7 @@ npx tsc --init
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
+    "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
@@ -56,6 +57,7 @@ mkdir src/models
 mkdir src/repositories
 mkdir src/routes
 mkdir src/services
+mkdir src/utils
 touch src/index.ts
 touch .env
 ```
@@ -84,7 +86,7 @@ DB_USER=root
 DB_PASSWORD=password
 DB_NAME=mydatabase
 PORT=3000
-SECRET_KEY_ADMIN=mi_clave_secreta
+JWT_SECRET=your_secret_key
 ```
 
 ### Crear el acceso a datos
@@ -255,27 +257,27 @@ En `src/routes`, crear un archivo `router.ts`:
 ```typescript
 import { Router } from 'express';
 import { userRouter } from "./userRouter";
-// import { productRouter } from './productRouter';
-// import { cartRouter } from './cartRouter';
-// import { orderRouter } from './orderRouter';
-// import { login } from './login';
+import { productRouter } from './productRouter';
+import { orderRouter } from './orderRouter';
+import { productCartRouter } from './productCartRouter';
+import { authRouter } from './authRouter';
 
 export const router: Router = Router();
 
 // Rutas para la gestión de usuarios
 router.use('/users', userRouter);
 
-// // Rutas para la gestión de productos
-// router.use('/products', productRouter);
+// Rutas para la gestión de productos
+router.use('/products', productRouter);
 
-// // Rutas para la gestión de carritos de compras
-// router.use('/carts', cartRouter);
+// Rutas para la gestión de órdenes
+router.use('/orders', orderRouter);
 
-// // Rutas para la gestión de órdenes
-// router.use('/orders', orderRouter);
+// Rutas para la gestión de productos carros
+router.use('/productCarts', productCartRouter);
 
-// // Rutas para autenticación y autorización
-// router.use('/auth', login);
+// Rutas para autenticación y autorización
+router.use('/auth', authRouter);
 ```
 
 ### Configurar la vista principal (el archivo `index.ts`)
@@ -286,26 +288,30 @@ import env from 'dotenv';
 import sequelize from './config/db';
 import { router } from './routes/router';
 
+
+env.config();  // Configura las variables de entorno desde el archivo .env
+
 const server = express();
-server.use(express.json());
-env.config();
-server.use('/appi', router);
-const PORT = process.env.PORT || 3001
+server.use(express.json());  // Middleware para manejar JSON
+server.use('/api', router);  // Rutas principales
 
-const startserver = async () => {
+const PORT = process.env.PORT || 3001;
+
+const startServer = async () => {
     try {
-        await sequelize.authenticate()
-        await sequelize.sync()
-        console.log("Database Connected")
-        server.listen(PORT, () => {
-            console.log(`server executted in http://localhost:${PORT}`);
-        })
-    } catch (error: any) {
-        console.log(`somethings wrong from index.ts`, error)
-    }
-}
+        await sequelize.authenticate();
+        await sequelize.sync();
+        console.log("Database Connected");
 
-startserver();
+        server.listen(PORT, () => {
+            console.log(`The server is running at http://localhost:${PORT}`);
+        });
+    } catch (error: any) {
+        console.error(`Something went wrong in index.ts:`, error);
+    }
+};
+
+startServer();
 ```
 
 ### Compilar y ejecutar el proyecto

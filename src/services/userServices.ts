@@ -3,7 +3,6 @@ import { inject,injectable } from "tsyringe";
 import { User } from "../models/userTable";
 
 
-
 @injectable()
 export class UserService{
     constructor(@inject(UserRepository) private userRepository:UserRepository){}
@@ -55,3 +54,5 @@ export class UserService{
         
       }
 }
+
+

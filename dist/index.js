@@ -16,22 +16,22 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = __importDefault(require("./config/db"));
 const router_1 = require("./routes/router");
+dotenv_1.default.config(); // Configura las variables de entorno desde el archivo .env
 const server = (0, express_1.default)();
-server.use(express_1.default.json());
-dotenv_1.default.config();
-server.use('/appi', router_1.router);
+server.use(express_1.default.json()); // Middleware para manejar JSON
+server.use('/api', router_1.router); // Rutas principales
 const PORT = process.env.PORT || 3001;
-const startserver = () => __awaiter(void 0, void 0, void 0, function* () {
+const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield db_1.default.authenticate();
         yield db_1.default.sync();
         console.log("Database Connected");
         server.listen(PORT, () => {
-            console.log(`server executted in http://localhost:${PORT}`);
+            console.log(`The server is running at http://localhost:${PORT}`);
         });
     }
     catch (error) {
-        console.log(`somethings wrong from index.ts`, error);
+        console.error(`Something went wrong in index.ts:`, error);
     }
 });
-startserver();
+startServer();

@@ -9,12 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ControllAccess = void 0;
+exports.AuthController = void 0;
 const tsyringe_1 = require("tsyringe");
 const security_1 = require("../services/security");
+const userServices_1 = require("../services/userServices");
+const handleError_1 = require("../utils/handleError");
 const SecurityServiceForUse = tsyringe_1.container.resolve(security_1.Security);
-class ControllAccess {
-    static access(req, resp) {
+class AuthController {
+    static registerUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email, password, roleId } = req.body;
+                // Verificar que todos los campos requeridos estén presentes
+                if (!email || !password || !roleId) {
+                    console.warn('Registration attempt with missing data');
+                    return res.status(400).json({ status: 400, message: 'Email, password, and roleId are required.' });
+                }
+                const userService = tsyringe_1.container.resolve(userServices_1.UserService);
+                const createdUser = yield userService.createUser({ email, password, roleId });
+                console.info(`User registered: ${email}`);
+                res.status(201).json({ status: 201, message: createdUser });
+            }
+            catch (error) {
+                // Asegúrate de que 'error' es un objeto Error
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                console.error(`Error in AuthController.registerUser: ${errorMessage}`);
+                (0, handleError_1.handleError)(res, req, error);
+            }
+        });
+    }
+    static loginUser(req, resp) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const email = req.body.email;
@@ -38,4 +62,4 @@ class ControllAccess {
         });
     }
 }
-exports.ControllAccess = ControllAccess;
+exports.AuthController = AuthController;
